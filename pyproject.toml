@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "biomechanics"
+version = "0.0.1"
+description = "Teaching example for constitutive modeling"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "License"}
+keywords = ["constitutive model", "viscoelasticity", "tissue", "biomechanics"]
+authors = [
+  {name = "David A. Nordsletten", email = "nordslet@umich.edu"},
+  {name = "Will Zhang", email = "willwz@umich.edu"}
+]
+maintainers = [
+  {name = "David A. Nordsletten", email = "nordslet@umich.edu"},
+  {name = "Will Zhang", email = "willwz@umich.edu"}
+]
+classifiers = [
+  "Development Status :: 0 - Alpha",
+  "Programming Language :: Python",
+]
+dependencies = [
+  "numpy",
+  "scipy",
+  "matplotlib",
+]
+
+[project.urls]
+homepage = "https://example.com"
+documentation = "https://readthedocs.org"
+repository = "https://github.com/willwz/nordsletten_summer_school"
+changelog = "https://github.com/willwz/nordsletten_summer_school/CHANGELOG.md"
