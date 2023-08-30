@@ -14,7 +14,7 @@ class HyperelasticModel(abc.ABC):
     """
 
     @abc.abstractmethod
-    def pk2(self, right_cg: Arr[f64]) -> Arr[f64]:
+    def pk2(self, F: Arr[f64]) -> Arr[f64]:
         """Take the right cauchy green strain tensor and returns the 2nd Piola Kirchhoff stress tensor"""
         pass
 
@@ -27,3 +27,19 @@ class HyperelasticModel(abc.ABC):
     # def cauchy(self, x: Arr[f64]) -> Arr[f64]:
     #     """Take the right cauchy green strain tensor and returns the 2nd Piola Kirchhoff stress tensor"""
     #     pass
+
+
+class ViscoelaticModel(abc.ABC):
+    """Hyperelastic Models
+
+    Methods:
+        pk2(Arr[f64, (2,2)]) : return the 2nd Piola Kirchhoff tensor
+        pk1(Arr[f64, (2,2)]) : return the 1nd Piola Kirchhoff tensor
+        cauchy(Arr[f64, (2,2)]) : return the Cauch stress tensor
+
+    """
+
+    @abc.abstractmethod
+    def pk2(self, F: Arr[f64], dt: Arr[f64]) -> Arr[f64]:
+        """Take the right cauchy green strain tensor and returns the 2nd Piola Kirchhoff stress tensor"""
+        pass
