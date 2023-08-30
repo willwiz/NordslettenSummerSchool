@@ -40,6 +40,6 @@ class ViscoelaticModel(abc.ABC):
     """
 
     @abc.abstractmethod
-    def pk2(self, F: Arr[f64], dt: Arr[f64]) -> Arr[f64]:
+    def pk2(self, F: Arr[f64], time: Arr[f64]) -> Arr[f64]:
         """Take the right cauchy green strain tensor and returns the 2nd Piola Kirchhoff stress tensor"""
         pass

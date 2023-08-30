@@ -24,6 +24,17 @@ def get_change_of_basis_tensor(v_f: Arr[f64], v_s: Arr[f64]):
 
 
 @dataclass(slots=True)
+class CompositeHyperelasticModel(HyperelasticModel):
+    models: list[HyperelasticModel]
+
+    def pk2(self, F: Arr[f64]) -> Arr[f64]:
+        res = np.zeros_like(F)
+        for law in self.models:
+            res = res + law.pk2(F)
+        return res
+
+
+@dataclass(slots=True)
 class NeoHookeanModel(HyperelasticModel):
     """2D Neo Hookean Model
     Attributes:

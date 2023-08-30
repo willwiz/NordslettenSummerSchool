@@ -1,6 +1,6 @@
+from dataclasses import dataclass
 import os
 import numpy as np
-from typing import Tuple, Optional
 from scipy.io import loadmat
 from numpy import float64 as f64, interp, exp, pi, ndarray, zeros
 from numpy.typing import NDArray as Arr
@@ -8,9 +8,8 @@ from numpy.typing import NDArray as Arr
 pack_dir = os.path.dirname(os.path.abspath(__file__))
 
 
+@dataclass(slots=True, init=False)
 class CaputoInitialize:
-    __slots__ = ["Np", "beta0", "betas", "taus"]
-
     Np: int
     beta0: float
     betas: Arr[f64]
@@ -36,31 +35,49 @@ class CaputoInitialize:
         self.taus = np.array([interp(alpha, x, i) / freq for i in taum])
 
 
-def caputo_derivative_linear(
-    carp: CaputoInitialize, df: ndarray, dt: float, OldK: Arr[f64], betas: Arr[f64]
-):
-    ek = carp.tau / (carp.tau + dt)
-    Qk = np.einsum("k,kij->kij", ek, OldK + np.einsum("k,ij->kij", betas, df))
-    v = (carp.beta0 / dt) * df + np.einsum("ki->i", carp.Q)
-    return v, Qk
+def caputo_derivative_linear(carp: CaputoInitialize, S: Arr[f64], dt: Arr[64]):
+    nt, *dim = S.shape
+    ek = carp.taus / (dt[:, np.newaxis] + carp.taus)
+    df = np.diff(S, prepend=[S[0, :]], axis=0)
+    beta_part = np.einsum("k,mi...->mki...", carp.betas, df)
+    Qk = np.zeros((nt, 9, *dim), dtype=f64)
+    for i in range(1, nt):
+        Qk[i] = np.einsum("k,ki...->ki...", ek[i], Qk[i - 1] + beta_part[i])
+    return np.einsum("m,mi...->mi...", (carp.beta0 / dt), df) + np.einsum(
+        "mki...->mi...", Qk
+    )
+
+
+def caputo_derivative_quadratic(carp: CaputoInitialize, S: Arr[f64], dt: Arr[64]):
+    nt, *dim = S.shape
+    ek = exp(-0.5 * dt[:, np.newaxis] / carp.taus)
+    e2 = ek * ek
+    df = np.diff(S, prepend=[S[0, :]], axis=0)
+    beta_part = np.einsum("k,mk,mi...->mki...", carp.betas, ek, df)
+    Qk = np.zeros((nt, 9, *dim), dtype=f64)
+    for i in range(1, nt):
+        Qk[i] = np.einsum("k,ki...->ki...", e2[i], Qk[i - 1]) + beta_part[i]
+    return np.einsum("m,mi...->mi...", (carp.beta0 / dt), df) + np.einsum(
+        "mki...->mi...", Qk
+    )
 
 
 def caputo_derivative1_iter(
     fn: ndarray, dt: float, carp: CaputoInitialize
-) -> Tuple[ndarray, CaputoInitialize]:
+) -> tuple[ndarray, CaputoInitialize]:
     df = fn - carp.f_prev
     ek = carp.tau / (carp.tau + dt)
     for k in range(carp.N):
         carp.Q[k, :] = ek[k] * (carp.Q[k, :] + carp.beta[k] * df)
-    # v = (carp.beta0 / dt) * df + einsum('ki->i', carp.Q)
-    v = np.einsum("ki->i", carp.Q)
-    carp.f_prev = fn
+    v = (carp.beta0 / dt) * df + np.einsum("ki->i", carp.Q)
+    # v = np.einsum("ki->i", carp.Q)
+    # carp.f_prev = fn
     return v, carp
 
 
 def caputo_derivative2_iter(
     fn: ndarray, dt: float, carp: CaputoInitialize
-) -> Tuple[ndarray, CaputoInitialize]:
+) -> tuple[ndarray, CaputoInitialize]:
     df = fn - carp.f_prev
     ek = exp(-0.5 * dt / carp.tau)
     e2 = ek * ek
@@ -74,7 +91,7 @@ def caputo_derivative2_iter(
 
 def diffeq_approx1_iter(
     fn: ndarray, dt: float, carp: CaputoInitialize
-) -> Tuple[ndarray, CaputoInitialize]:
+) -> tuple[ndarray, CaputoInitialize]:
     K0 = carp.beta0 / dt
     ek = carp.tau / (carp.tau + dt)
     K0 = carp.delta * (K0 + np.einsum("k,k->", carp.beta, ek))
@@ -88,9 +105,22 @@ def diffeq_approx1_iter(
     return v, carp
 
 
+def caputo_diffeq_linear(carp: CaputoInitialize, S: Arr[f64], dt: Arr[64]):
+    nt, *dim = S.shape
+    ek = carp.taus / (dt[:, np.newaxis] + carp.taus)
+    df = np.diff(S, prepend=[S[0, :]], axis=0)
+    beta_part = np.einsum("k,mi...->mki...", carp.betas, df)
+    Qk = np.zeros((nt, 9, *dim), dtype=f64)
+    for i in range(1, nt):
+        Qk[i] = np.einsum("k,ki...->ki...", ek[i], Qk[i - 1] + beta_part[i])
+    return np.einsum("m,mi...->mi...", (carp.beta0 / dt), df) + np.einsum(
+        "mki...->mi...", Qk
+    )
+
+
 def diffeq_approx2_iter(
     fn: ndarray, dt: float, carp: CaputoInitialize
-) -> Tuple[ndarray, CaputoInitialize]:
+) -> tuple[ndarray, CaputoInitialize]:
     K0 = carp.beta0 / dt
     ek = exp(-0.5 * dt / carp.tau)
     e2 = ek * ek

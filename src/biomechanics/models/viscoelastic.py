@@ -1,8 +1,23 @@
+from dataclasses import dataclass
 import numpy as np
 from numpy import float64 as f64
 from numpy.typing import NDArray as Arr
 from biomechanics.models.caputoD import CaputoInitialize
 from biomechanics._interfaces import HyperelasticModel, ViscoelaticModel
+
+
+@dataclass(slots=True)
+class CompositeViscoelasticModel(ViscoelaticModel):
+    hyperelastic_models: list[HyperelasticModel]
+    viscoelastic_models: list[ViscoelaticModel]
+
+    def pk2(self, F: Arr[f64], time: Arr[f64]) -> Arr[f64]:
+        res = np.zeros_like(F)
+        for law in self.hyperelastic_models:
+            res = res + law.pk2(F)
+        for law in self.viscoelastic_models:
+            res = res + law.pk2(F, time)
+        return res
 
 
 class FractionalVEModel(ViscoelaticModel):
