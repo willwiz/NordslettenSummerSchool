@@ -29,7 +29,5 @@ dependencies = [
 ]
 
 [project.urls]
-homepage = "https://example.com"
-documentation = "https://readthedocs.org"
 repository = "https://github.com/willwz/nordsletten_summer_school"
-changelog = "https://github.com/willwz/nordsletten_summer_school/CHANGELOG.md"
+changelog = "https://github.com/willwz/nordsletten_summer_school/CHANGELOG"

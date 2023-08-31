@@ -1,26 +1,10 @@
-.PHONY: all build-dep build unittest buildtest
+.PHONY: build
 
-all: clean build-dep build unittest
-
-
-
-build-dep:
-	python -m pip install -r ./requirements.txt
+all: build
 
 build:
-	python ./setup.py build_ext --build-lib .
-
-test:
-	python -m unittest discover ./unittests
-
-buildtest: build test
-
-clean:
-	rm -rf build/*
-	rm -rf src/cython/build/*
-	rm -f src/py/*.pyd
-	rm -f src/py/*/*.pyd
-	rm -f src/py/*/*/*.pyd
-	rm -f src/py/*.so
-	rm -f src/py/*/*.so
-	rm -f src/py/*/*/*.so
+	ifeq ($(VIRTUAL_ENV),)
+		@echo "This should be installed in a python virtual environment"
+	else
+		pip install -e .
+	endif

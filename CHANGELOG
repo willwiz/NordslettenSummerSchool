@@ -1,76 +1,8 @@
 # Change Log
 
-All notable changes to this project will be documented in this file.
 
+## Version [0.0.0] - 2023-08-30
 
-## Version [0.0.5] - 2023-04-04
+Initial version.
 
-Hash:
-
-### Added
-- options to change optimation function parameters from commandline
-
-## Version [0.0.4] - 2023-03-28
-
-Hash:
-
-### Added
-- MAE error
-
-
-### Changed
-
-- indexing for Set name
-- Errors only use fitted protocols, e.g. no preconditioning
-- Fix for MSE
-
-
-## Version [0.0.3] - 2023-03-21
-
-Hash:
-
-### Added
-- RMSE error for individual protocols
-
-
-### Changed
-
-- wider search radius for diff evo algorithm
-
-
-## Version [0.0.2] - 2023-03-12
-
-Hash: 18b15f232236452b7a5ca79d3670e738d76ec44a
-
-### Added
-- excel input method
-- additional outputs, e.g., raw data, info with date time
-- versioning
-
-
-### Changed
-
-- keyword when supplying output folder path to prep and opt
-- more logging options
-- some optimization parameter adjustment
-
-
-### Fixed
-
-- Not applicable
-
-## Version [0.0.1] - 2023-01-12
-
-Initial version. Semi-complete except for documented implementation.
-
-### Added
-- All Initial functions added
-
-### Changed
-
-- Not applicable
-
-### Fixed
-
-- Not applicable
 
