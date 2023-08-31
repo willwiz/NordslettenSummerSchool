@@ -22,6 +22,7 @@ def plot_stress_vs_strain_1D(
     dpi: int = 150,
     x_label: str = r"$E$",
     y_label: str = r"$S$ (kPa)",
+    curve_labels: list[str] | None = None,
     colors: list[str] = ["k", "r", "b", "g", "c", "m"],
     lines: list[str] = ["-", "-", "-", "-", "-", "-"],
     marker: list[str] = ["none", "none", "none", "none", "none", "none"],
@@ -48,6 +49,8 @@ def plot_stress_vs_strain_1D(
     ax.set_prop_cycle(cyclers)
     for x, y in data:
         ax.plot(x[:, 0, 0], y[:, 0, 0], **styles, **kwargs)
+    if curve_labels:
+        ax.legend(curve_labels)
     if x_label:
         ax.set_xlabel(x_label, fontsize=16)
     if y_label:
@@ -76,6 +79,7 @@ def plot_stress_vs_strain_2D(
         r"$S_{21}$ (kPa)",
         r"$S_{22}$ (kPa)",
     ],
+    curve_labels: list[str] | None = None,
     colors: list[str] = ["k", "r", "b", "g", "c", "m"],
     lines: list[str] = ["-", "-", "-", "-", "-", "-"],
     marker: list[str] = ["none", "none", "none", "none", "none", "none"],
@@ -109,6 +113,8 @@ def plot_stress_vs_strain_2D(
             axs[i, j].set_xlabel(x_label[k], fontsize=16)
         if y_label:
             axs[i, j].set_ylabel(y_label[k], fontsize=16)
+    if curve_labels:
+        axs[0, 1].legend(curve_labels)
     if x_lim:
         plt.setp(fig.axes, xlim=x_lim)
     if y_lim:
@@ -129,6 +135,7 @@ def plot_strain_vs_time_1D(
     dpi: int = 150,
     x_label: str = r"$time$ (s)",
     y_label: str = r"$E$ (kPa)",
+    curve_labels: list[str] | None = None,
     colors: list[str] = ["k", "r", "b", "g", "c", "m"],
     lines: list[str] = ["-", "-", "-", "-", "-", "-"],
     marker: list[str] = ["none", "none", "none", "none", "none", "none"],
@@ -159,6 +166,8 @@ def plot_strain_vs_time_1D(
         ax.set_xlabel(x_label, fontsize=16)
     if y_label:
         ax.set_ylabel(y_label, fontsize=16)
+    if curve_labels:
+        ax.legend(curve_labels)
     if x_lim:
         plt.setp(fig.axes, xlim=x_lim)
     if y_lim:
@@ -184,6 +193,7 @@ def plot_strain_vs_time_2D(
         r"$E_{21}$ (kPa)",
         r"$E_{22}$ (kPa)",
     ],
+    curve_labels: list[str] | None = None,
     colors: list[str] = ["k", "r", "b", "g", "c", "m"],
     lines: list[str] = ["-", "-", "-", "-", "-", "-"],
     marker: list[str] = ["none", "none", "none", "none", "none", "none"],
@@ -216,6 +226,8 @@ def plot_strain_vs_time_2D(
             axs[k].set_xlabel(x_label, fontsize=16)
         if y_label:
             axs[k].set_ylabel(y_label[k], fontsize=16)
+    if curve_labels:
+        axs[1].legend(curve_labels)
     if x_lim:
         plt.setp(fig.axes, xlim=x_lim)
     if y_lim:
@@ -236,6 +248,7 @@ def plot_stress_vs_time_1D(
     dpi: int = 150,
     x_label: str = r"$time$ (s)",
     y_label: str = r"$S$ (kPa)",
+    curve_labels: list[str] | None = None,
     colors: list[str] = ["k", "r", "b", "g", "c", "m"],
     lines: list[str] = ["-", "-", "-", "-", "-", "-"],
     marker: list[str] = ["none", "none", "none", "none", "none", "none"],
@@ -266,6 +279,8 @@ def plot_stress_vs_time_1D(
         ax.set_xlabel(x_label, fontsize=16)
     if y_label:
         ax.set_ylabel(y_label, fontsize=16)
+    if curve_labels:
+        ax.legend(curve_labels)
     if x_lim:
         plt.setp(fig.axes, xlim=x_lim)
     if y_lim:
@@ -291,6 +306,7 @@ def plot_stress_vs_time_2D(
         r"$S_{21}$ (kPa)",
         r"$S_{22}$ (kPa)",
     ],
+    curve_labels: list[str] | None = None,
     colors: list[str] = ["k", "r", "b", "g", "c", "m"],
     lines: list[str] = ["-", "-", "-", "-", "-", "-"],
     marker: list[str] = ["none", "none", "none", "none", "none", "none"],
@@ -323,6 +339,8 @@ def plot_stress_vs_time_2D(
             axs[k].set_xlabel(x_label, fontsize=16)
         if y_label:
             axs[k].set_ylabel(y_label[k], fontsize=16)
+    if curve_labels:
+        axs[1].legend(curve_labels)
     if x_lim:
         plt.setp(fig.axes, xlim=x_lim)
     if y_lim:
