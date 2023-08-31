@@ -8,9 +8,6 @@ class HyperelasticModel(abc.ABC):
 
     Methods:
         pk2(Arr[f64, (2,2)]) : return the 2nd Piola Kirchhoff tensor
-        pk1(Arr[f64, (2,2)]) : return the 1nd Piola Kirchhoff tensor
-        cauchy(Arr[f64, (2,2)]) : return the Cauch stress tensor
-
     """
 
     @abc.abstractmethod
@@ -34,9 +31,6 @@ class ViscoelasticModel(abc.ABC):
 
     Methods:
         pk2(Arr[f64, (2,2)]) : return the 2nd Piola Kirchhoff tensor
-        pk1(Arr[f64, (2,2)]) : return the 1nd Piola Kirchhoff tensor
-        cauchy(Arr[f64, (2,2)]) : return the Cauch stress tensor
-
     """
 
     @abc.abstractmethod

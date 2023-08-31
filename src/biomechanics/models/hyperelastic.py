@@ -4,7 +4,7 @@ from numpy.typing import NDArray as Arr
 from numpy import float64 as f64
 from numpy.linalg import norm
 from biomechanics._interfaces import HyperelasticModel
-from biomechanics.kinematics.biaxial import (
+from biomechanics.kinematics.mapping import (
     compute_right_cauchy_green,
     compute_green_lagrange_strain,
 )
@@ -56,6 +56,7 @@ class GuccioneModel(HyperelasticModel):
     b1: float  # Isotropic Exponent
     b2: Arr[f64]  # Array of fiber Exponents
     H: Arr[f64]  # Structural tensor for material orientation
+    fiber: Arr[f64]  # Fiber orientation array
 
     def __init__(
         self,
@@ -88,6 +89,7 @@ class CostaModel(HyperelasticModel):
     __slots__ = ["mu", "b", "fiber"]
     mu: float  # Bulk Modulus
     b: Arr[f64]  # Array of fiber Exponents
+    fiber: Arr[f64]  # Fiber orientation array
 
     def __init__(
         self,
@@ -98,6 +100,8 @@ class CostaModel(HyperelasticModel):
         b_fs: float,
         b_fn: float,
         b_sn: float,
+        v_f: Arr[f64],
+        v_s: Arr[f64],
     ) -> None:
         self.mu = mu / 2.0
         self.b = np.array(
@@ -121,6 +125,7 @@ class HolzapfelOgdenModel(HyperelasticModel):
     b_iso: float
     k_fiber: Arr[f64]
     b_fiber: Arr[f64]
+    fiber: Arr[f64]  # Fiber orientation array
 
     def __init__(
         self,
@@ -132,11 +137,14 @@ class HolzapfelOgdenModel(HyperelasticModel):
         b_fs: float,
         k_ss: float,
         b_ss: float,
+        v_f: Arr[f64],
+        v_s: Arr[f64],
     ) -> None:
         self.k_iso = k_iso
         self.b_iso = b_iso
         self.k_fiber = np.array([[k_ff, k_fs, 0], [k_fs, k_ss, 0], [0, 0, 0]])
         self.b_fiber = np.array([[b_ff, b_fs, 0], [b_fs, b_ss, 0], [0, 0, 0]])
+        self.fiber = get_change_of_basis_tensor(v_f, v_s)
 
     def pk2(
         self,
