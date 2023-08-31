@@ -46,23 +46,23 @@ Once this is done, you are ready to go.
 
 This module contains the following for generating deformation gradient data:
 ```python
-def construct_tensor_uniaxial(stretch: NDArray[f64]) -> NDArray[f64]
+def construct_tensor_uniaxial(stretch: NDArray[f64]) -> NDArray[f64]: pass
 
 def construct_tensor_biaxial(
     F11: NDArray[f64] | float = 1.0,
     F12: NDArray[f64] | float = 0.0,
     F21: NDArray[f64] | float = 0.0,
     F22: NDArray[f64] | float = 1.0,
-) -> NDArray[f64]
+) -> NDArray[f64]: pass
 ```
 
 This module also contains the following for converting the deformation gradient to other strain tensor types:
 ```python
-def compute_right_cauchy_green(F: Arr[f64]) -> Arr[f64]
+def compute_right_cauchy_green(F: Arr[f64]) -> Arr[f64]: pass
 
-def compute_left_cauchy_green(F: Arr[f64]) -> Arr[f64]
+def compute_left_cauchy_green(F: Arr[f64]) -> Arr[f64]: pass
 
-def compute_green_lagrange_strain(F: Arr[f64]) -> Arr[f64]
+def compute_green_lagrange_strain(F: Arr[f64]) -> Arr[f64]: pass
 ```
 
 ### Constitutive Models
@@ -72,9 +72,9 @@ All constitutive models are Python classes that instantiate with their material 
 This module also contains the following functions for converting to other stress tensor types:
 
 ```python
-def compute_pk1_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]
+def compute_pk1_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]: pass
 
-def compute_cauchy_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]
+def compute_cauchy_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]: pass
 ```
 
 #### Hyperelastic Constitutive Models
@@ -97,7 +97,7 @@ class NeoHookeanModel(HyperelasticModel):
 
     def __init__(self,
         mu:float # Bulk Modulus
-    ) -> None
+    ) -> None: pass
 ```
 
 
@@ -117,7 +117,7 @@ class GuccioneModel(HyperelasticModel):
         b_sn: float, # Off-fiber interaction exponent
         v_f: Arr[f64], # Unit vector for fiber direction
         v_s: Arr[f64], # Unit vector for fiber sheet direction
-    ) -> None
+    ) -> None: pass
 ```
 
 
@@ -137,7 +137,7 @@ class CostaModel(HyperelasticModel):
         b_sn: float, # Sheet-normal interation exponent
         v_f: Arr[f64], # Unit vector for fiber direction
         v_s: Arr[f64], # Unit vector for fiber sheet direction
-    ) -> None
+    ) -> None: pass
 ```
 
 ```python
@@ -159,7 +159,7 @@ class HolzapfelOgdenModel(HyperelasticModel):
         b_ss: float, # Sheet exponent
         v_f: Arr[f64], # Unit vector for fiber direction
         v_s: Arr[f64], # Unit vector for fiber sheet direction
-    ) -> None
+    ) -> None: pass
 ```
 
 
@@ -176,5 +176,30 @@ def add_hydrostatic_pressure(S: Arr[f64], F: Arr[f64]) -> Arr[f64]
 
 ### Plotting
 
+```python
+def plot_stress_vs_strain_1D(
+    *data: tuple[Arr[f64], Arr[f64]] | list[Arr[f64]], ...
+) -> None: pass
+
+def plot_stress_vs_strain_2D(
+    *data: tuple[Arr[f64], Arr[f64]] | list[Arr[f64]], ...
+) -> None: pass
+
+def plot_strain_vs_time_1D(
+    time: Arr[f64], *data: Arr[f64], ...
+) -> None: pass
+
+def plot_strain_vs_time_2D(
+    time: Arr[f64], *data: Arr[f64], ...
+) -> None: pass
+
+def plot_stress_vs_time_1D(
+    time: Arr[f64], *data: Arr[f64], ...
+) -> None: pass
+
+def plot_stress_vs_time_2D(
+    time: Arr[f64], *data: Arr[f64], ...
+) -> None: pass
+```
 
 
