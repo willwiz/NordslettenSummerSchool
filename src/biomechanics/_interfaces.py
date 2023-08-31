@@ -29,7 +29,7 @@ class HyperelasticModel(abc.ABC):
     #     pass
 
 
-class ViscoelaticModel(abc.ABC):
+class ViscoelasticModel(abc.ABC):
     """Hyperelastic Models
 
     Methods:
