@@ -3,7 +3,7 @@ For Graz Biomechanical Summer School
 
 ### Before Getting Started
 
-Before you get started, make sure to install python. To avoid contaminating your default Python setup, please use a virtual environment.
+Before you get started, make sure to install Python. To avoid contaminating your default Python setup, please use a virtual environment.
 
 To create a virtual environment, e.g. in .venv of the current working directory, use the command
 ```console
@@ -199,9 +199,41 @@ def add_hydrostatic_pressure(S: Arr[f64], F: Arr[f64]) -> Arr[f64]: pass
 ```
 
 ### Composing Models
+The following two classes are provided for composing models:
+```python
+class CompositeHyperelasticModel(HyperelasticModel):
 
+    def __init__(self,
+        models: list[HyperelasticModel]
+    ) -> None: pass
+```
+```python
+class CompositeViscoelasticModel(ViscoelasticModel):
 
+    def __init__(self,
+        hyperelastic_models: list[HyperelasticModel] | None = None,
+        viscoelastic_models: list[ViscoelasticModel] | None = None,
+    ) -> None: pass
+```
 
+For example,
+```python
+    fractional_holzapfel_model = FractionalVEModel(0.15, 10.0, 9, [
+        HolzapfelOgdenModel(1.0, .5, 1.0, 1.0, 1.0, 0.25, 1.0, 0.5, np.array([1,0,0]), np.array([0,1,0]))
+    ])
+    composite_model = CompositeViscoelasticModel(
+        hyperelastic_models = [
+            NeoHookean(1.0),
+            GuccioneModel(1.0, 0.0., 1.0, 0.5, 0.5, np.array([1,0,0]), np.array([0,1,0])),
+        ],
+        viscoelastic_models = [
+            fractional_holzapfel_model,
+        ],
+    )
+
+    stress = composite_model(F_tensor, time)
+
+```
 ### Plotting
 
 The following plot functions are provided:
