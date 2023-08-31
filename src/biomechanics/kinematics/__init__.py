@@ -1,2 +1,2 @@
-from .biaxial import *
-from .uniaxial import *
+from .mapping import *
+from .deformation import *

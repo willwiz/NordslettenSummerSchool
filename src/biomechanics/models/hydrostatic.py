@@ -1,6 +1,6 @@
 from numpy.typing import NDArray as Arr
 from numpy import float64 as f64, einsum
-from biomechanics.kinematics.biaxial import compute_right_cauchy_green
+from biomechanics.kinematics.mapping import compute_right_cauchy_green
 from biomechanics.kinematics.operations import inverse_fastest
 
 

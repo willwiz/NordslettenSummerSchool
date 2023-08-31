@@ -231,8 +231,7 @@ For example,
         ],
     )
 
-    stress = composite_model(F_tensor, time)
-
+    stress = composite_model.pk2(F_tensor, time)
 ```
 ### Plotting
 
