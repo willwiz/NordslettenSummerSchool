@@ -38,7 +38,12 @@ If your current directory is inside `nordsletten_summer_school`, you can install
 python -m pip install .
 ```
 
-Once this is done, you are ready to go.
+Once this is done, you are ready to go. All functions can be imported from the `biomechanics` module, i.e.,
+```python
+from biomechanics import *
+```
+
+See `example.py` for example.
 
 ## Content
 
@@ -93,7 +98,6 @@ i.e., they all have the method `pk2` for calculating the second Piola Kirchhoff 
 The list of models includes:
 ```python
 class NeoHookeanModel(HyperelasticModel):
-    mu: float # Bulk Modulus
 
     def __init__(self,
         mu:float # Bulk Modulus
@@ -103,11 +107,6 @@ class NeoHookeanModel(HyperelasticModel):
 
 ```python
 class GuccioneModel(HyperelasticModel):
-    mu: float  # Bulk Modulus
-    b1: float  # Isotropic Exponent
-    b2: Arr[f64]  # Array of fiber Exponents
-    H: Arr[f64]  # Structural tensor for isotropic part, i.e. identity
-    fiber: Arr[f64]  # Fiber orientation array
 
     def __init__(self,
         mu: float, # Bulk Modulus
@@ -123,9 +122,6 @@ class GuccioneModel(HyperelasticModel):
 
 ```python
 class CostaModel(HyperelasticModel):
-    mu: float  # Bulk Modulus
-    b: Arr[f64]  # Array of fiber Exponents
-    fiber: Arr[f64]  # Fiber orientation array
 
     def __init__(self,
         mu: float, # Bulk modulus
@@ -142,11 +138,6 @@ class CostaModel(HyperelasticModel):
 
 ```python
 class HolzapfelOgdenModel(HyperelasticModel):
-    k_iso: float # Isotropic part modulus
-    b_iso: float # Isotropic part exponent
-    k_fiber: Arr[f64] # Anisotropic modulus array
-    b_fiber: Arr[f64] # Anisotropic exponent array
-    fiber: Arr[f64]  # Fiber orientation array
 
     def __init__(self,
         k_iso: float, # Isotropic part modulus
@@ -165,16 +156,55 @@ class HolzapfelOgdenModel(HyperelasticModel):
 
 
 #### Viscoelastic Constitutive Models
+All viscoelastic models inherit from
+```python
+class ViscoelasticModel(abc.ABC):
+
+    @abc.abstractmethod
+    def pk2(self, F: Arr[f64], time: Arr[f64]) -> Arr[f64]:
+        pass
+```
+Two fractional viscoelastic models are provided, they operate on hyperelastic laws.
+
+```python
+class FractionalVEModel(ViscoelasticModel):
+
+    def __init__(self,
+        alpha: float, # Fractional order
+        Tf: float, # Periodicity
+        Np: int = 9, # Number of Prony terms
+        models: list[HyperelasticModel] | None = None, # Models being differentiated
+    ) -> None: pass
+```
+
+```python
+class FractionalDiffEqModel(ViscoelasticModel):
+
+    def __init__(self,
+        alpha: float, # Fractional order
+        delta: float, # Fractional term weight
+        Tf: float, # Periodicity
+        Np: int = 9, # Number of Prony terms
+        hyperelastic_models: list[HyperelasticModel] | None = None, # Hyperelastic Models on RHS
+        viscoelastic_models: list[ViscoelasticModel] | None = None, # Viscoelastic Models on RHS
+    ) -> None: pass
+```
 
 
 #### Hydrostatic Pressure
 You can add a hydrostatic pressure with
 
 ```python
-def add_hydrostatic_pressure(S: Arr[f64], F: Arr[f64]) -> Arr[f64]
+def add_hydrostatic_pressure(S: Arr[f64], F: Arr[f64]) -> Arr[f64]: pass
 ```
 
+### Composing Models
+
+
+
 ### Plotting
+
+The following plot functions are provided:
 
 ```python
 def plot_stress_vs_strain_1D(
@@ -202,4 +232,23 @@ def plot_stress_vs_time_2D(
 ) -> None: pass
 ```
 
+All plot functions have the following options:
+```python
+x_lim: list[float] | None = None # X plot range
+y_lim: list[float] | None = None # Y plot range
+figsize: tuple[float, float] = (4, 3) # figure size by inches
+dpi: int = 150 # DPI
+x_label: str|list[str] = r"$E$"
+y_label: str|list[str] = r"$S$ (kPa)"
+curve_labels: list[str] | None = None # in order create a legend with labels for each data passed in
+colors: list[str] = ["k", "r", "b", "g", "c", "m"]
+lines: list[str] = ["-", "-", "-", "-", "-", "-"] # "-" for lines, "none" for no lines
+marker: list[str] = ["none", "none", "none", "none", "none", "none"] # "o" for markers, "none" for no markers
+markersize: int | float = 4
+markerskip: int | list[int] | float | list[float] | None = None
+markeredgewidth: float = 0.3
+fillstyle: str = "full" # "full", "none", "top", "bottom", "left", "right"
+fout: str | None = None # "if None then figure will be displayed, if given a string, then attempt to save to str
+**kwargs # other kwargs will be pass to ax.plot
+```
 
