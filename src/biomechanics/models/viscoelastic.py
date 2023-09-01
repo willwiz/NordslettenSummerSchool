@@ -78,7 +78,7 @@ class FractionalDiffEqModel(ViscoelasticModel):
         pk2_viscoelastic = np.zeros_like(F)
         if self.vlaws:
             for law in self.vlaws:
-                pk2_viscoelastic = pk2_viscoelastic + law.pk2(F)
+                pk2_viscoelastic = pk2_viscoelastic + law.pk2(F, time)
         dt = np.diff(time, prepend=-1)
         return caputo_diffeq_linear(
             self.delta, self.carp, pk2_hyperelastic, pk2_viscoelastic, dt

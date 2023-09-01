@@ -139,7 +139,7 @@ def _caputo_diffeq_body(
         LHS[i] = (v + (K1[i] * LHS[i - 1])) / (1.0 + K1[i])
         # Updates
         beta_part = np.einsum("k,i...->ki...", bek[i], LHS[i] - LHS[i - 1])
-        Qk = np.einsum("k,ki...", e2[i], Qk) + beta_part
+        Qk = np.einsum("k,ki...->ki...", e2[i], Qk) + beta_part
     return LHS
 
 
@@ -153,7 +153,7 @@ def caputo_diffeq_linear(
     bek = np.einsum("k,mk->mk", carp.betas, ek)
     K1 = delta * (K0 + np.einsum("mk->m", bek))
     # Solve
-    RHS = S_HE + _caputo_derivative_body(K0, bek, ek, S_VE)
+    RHS = S_HE + _caputo_derivative_body(carp.Np, K0, bek, ek, S_VE)
     return _caputo_diffeq_body(carp.Np, delta, K1, bek, ek, RHS)
 
 
@@ -168,5 +168,5 @@ def caputo_diffeq_quadratic(
     e2 = ek * ek
     K1 = delta * (K0 + np.einsum("mk->m", bek))
     # Solve
-    RHS = S_HE + _caputo_derivative_body(K0, bek, e2, S_VE)
+    RHS = S_HE + _caputo_derivative_body(carp.Np, K0, bek, e2, S_VE)
     return _caputo_diffeq_body(carp.Np, delta, K1, bek, e2, RHS)
