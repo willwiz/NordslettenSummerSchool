@@ -63,11 +63,11 @@ def construct_tensor_biaxial(
 
 This module also contains the following for converting the deformation gradient to other strain tensor types:
 ```python
-def compute_right_cauchy_green(F: Arr[f64]) -> Arr[f64]: pass
+def compute_right_cauchy_green(F: NDArray[f64]) -> NDArray[f64]: pass
 
-def compute_left_cauchy_green(F: Arr[f64]) -> Arr[f64]: pass
+def compute_left_cauchy_green(F: NDArray[f64]) -> NDArray[f64]: pass
 
-def compute_green_lagrange_strain(F: Arr[f64]) -> Arr[f64]: pass
+def compute_green_lagrange_strain(F: NDArray[f64]) -> NDArray[f64]: pass
 ```
 
 ### Constitutive Models
@@ -77,9 +77,9 @@ All constitutive models are Python classes that instantiate with their material 
 This module also contains the following functions for converting to other stress tensor types:
 
 ```python
-def compute_pk1_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]: pass
+def compute_pk1_from_pk2(S: NDArray[f64], F: NDArray[f64]) -> NDArray[f64]: pass
 
-def compute_cauchy_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]: pass
+def compute_cauchy_from_pk2(S: NDArray[f64], F: NDArray[f64]) -> NDArray[f64]: pass
 ```
 
 #### Hyperelastic Constitutive Models
@@ -88,7 +88,7 @@ All hyperelastic models inherit from
 class HyperelasticModel(abc.ABC):
 
     @abc.abstractmethod
-    def pk2(self, F: Arr[f64]) -> Arr[f64]:
+    def pk2(self, F: NDArray[f64]) -> NDArray[f64]:
         pass
 ```
 i.e., they all have the method `pk2` for calculating the second Piola Kirchhoff stress tensor.
@@ -114,8 +114,8 @@ class GuccioneModel(HyperelasticModel):
         b_ff: float, # Fiber Exponent
         b_fs: float, # Fiber Shear Exponent
         b_sn: float, # Off-fiber interaction exponent
-        v_f: Arr[f64], # Unit vector for fiber direction
-        v_s: Arr[f64], # Unit vector for fiber sheet direction
+        v_f: NDArray[f64], # Unit vector for fiber direction
+        v_s: NDArray[f64], # Unit vector for fiber sheet direction
     ) -> None: pass
 ```
 
@@ -131,8 +131,8 @@ class CostaModel(HyperelasticModel):
         b_fs: float, # Fiber-sheet interation exponent
         b_fn: float, # Fiber-normal interation exponent
         b_sn: float, # Sheet-normal interation exponent
-        v_f: Arr[f64], # Unit vector for fiber direction
-        v_s: Arr[f64], # Unit vector for fiber sheet direction
+        v_f: NDArray[f64], # Unit vector for fiber direction
+        v_s: NDArray[f64], # Unit vector for fiber sheet direction
     ) -> None: pass
 ```
 
@@ -148,8 +148,8 @@ class HolzapfelOgdenModel(HyperelasticModel):
         b_fs: float, # Fiber-sheet interaction exponent
         k_ss: float, # Sheet modulus
         b_ss: float, # Sheet exponent
-        v_f: Arr[f64], # Unit vector for fiber direction
-        v_s: Arr[f64], # Unit vector for fiber sheet direction
+        v_f: NDArray[f64], # Unit vector for fiber direction
+        v_s: NDArray[f64], # Unit vector for fiber sheet direction
     ) -> None: pass
 ```
 
@@ -161,7 +161,7 @@ All viscoelastic models inherit from
 class ViscoelasticModel(abc.ABC):
 
     @abc.abstractmethod
-    def pk2(self, F: Arr[f64], time: Arr[f64]) -> Arr[f64]:
+    def pk2(self, F: NDArray[f64], time: NDArray[f64]) -> NDArray[f64]:
         pass
 ```
 Two fractional viscoelastic models are provided, they operate on hyperelastic laws.
@@ -195,7 +195,7 @@ class FractionalDiffEqModel(ViscoelasticModel):
 You can add a hydrostatic pressure with
 
 ```python
-def add_hydrostatic_pressure(S: Arr[f64], F: Arr[f64]) -> Arr[f64]: pass
+def add_hydrostatic_pressure(S: NDArray[f64], F: NDArray[f64]) -> NDArray[f64]: pass
 ```
 
 ### Composing Models
@@ -239,27 +239,27 @@ The following plot functions are provided:
 
 ```python
 def plot_stress_vs_strain_1D(
-    *data: tuple[Arr[f64], Arr[f64]] | list[Arr[f64]], ...
+    *data: tuple[NDArray[f64], NDArray[f64]] | list[NDArray[f64]], ...
 ) -> None: pass
 
 def plot_stress_vs_strain_2D(
-    *data: tuple[Arr[f64], Arr[f64]] | list[Arr[f64]], ...
+    *data: tuple[NDArray[f64], NDArray[f64]] | list[NDArray[f64]], ...
 ) -> None: pass
 
 def plot_strain_vs_time_1D(
-    time: Arr[f64], *data: Arr[f64], ...
+    time: NDArray[f64], *data: NDArray[f64], ...
 ) -> None: pass
 
 def plot_strain_vs_time_2D(
-    time: Arr[f64], *data: Arr[f64], ...
+    time: NDArray[f64], *data: NDArray[f64], ...
 ) -> None: pass
 
 def plot_stress_vs_time_1D(
-    time: Arr[f64], *data: Arr[f64], ...
+    time: NDArray[f64], *data: NDArray[f64], ...
 ) -> None: pass
 
 def plot_stress_vs_time_2D(
-    time: Arr[f64], *data: Arr[f64], ...
+    time: NDArray[f64], *data: NDArray[f64], ...
 ) -> None: pass
 ```
 
