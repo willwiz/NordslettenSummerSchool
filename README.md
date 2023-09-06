@@ -164,6 +164,44 @@ class ViscoelasticModel(abc.ABC):
     def pk2(self, F: NDArray[f64], time: NDArray[f64]) -> NDArray[f64]:
         pass
 ```
+
+Three classic viscoelastic models are provided, they operate on hyperelastic laws.
+```python
+class KelvinVoigtModel(ViscoelasticModel):
+
+    def __init__(self,
+        weight: float = 1.0, # multiplier on the stress
+        models: list[HyperelasticModel] | None = None, # Models being differentiated
+    ) -> None:
+        self.w = weight
+        self.laws = models if models else list()
+```
+
+```python
+class MaxwellModel(ViscoelasticModel):
+
+    def __init__(self,
+        weight: float = 0.0, # weight on the derivative on the left hand side
+        models: list[HyperelasticModel] | None = None, # Models on the right handside
+    ) -> None:
+        self.w = weight
+        self.hlaws = models
+```
+```python
+class ZenerModel(ViscoelasticModel):
+
+    def __init__(self,
+        weight_LHS: float = 0.0, # weight on the derivative on the left hand side
+        weight_RHS: float = 1.0, # multiplier on the stress under time derivative on the RHS
+        hyperelastic_models: list[HyperelasticModel] | None = None,
+        viscoelastic_models: list[ViscoelasticModel] | None = None, # taken time derivative of
+    ) -> None:
+        self.w_right = weight_RHS
+        self.w_left = weight_LHS
+        self.hlaws = hyperelastic_models if hyperelastic_models else list()
+        self.vlaws = viscoelastic_models if viscoelastic_models else list()
+```
+
 Two fractional viscoelastic models are provided, they operate on hyperelastic laws.
 
 ```python
@@ -238,6 +276,15 @@ For example,
 The following plot functions are provided:
 
 ```python
+
+def benchmark_plot(
+    x: Arr[f64] | Arr[i32], *data: Arr[f64], ...
+) -> None: pass
+
+def plot_scalar(
+    *data: tuple[Arr[f64], Arr[f64]] | list[Arr[f64]], ...
+) -> None: pass
+
 def plot_stress_vs_strain_1D(
     *data: tuple[NDArray[f64], NDArray[f64]] | list[NDArray[f64]], ...
 ) -> None: pass
@@ -274,14 +321,15 @@ y_label: str|list[str] = r"$S$ (kPa)"
 curve_labels: list[str] | None = None # in order create a legend with labels for each data passed in
 color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
 alpha: list[float] | None = None,
-linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"], # "-" for lines, "none" for no lines
+linestyle: list[str] | None = None, # "-" for lines, "none" for no lines
 linewidth: list[float] | None = None,
-marker: list[str] | None = ["none", "none", "none", "none", "none", "none"], # "o" for markers, "none" for no markers
+marker: list[str] | None = None, # "o" for markers, "none" for no markers
 markersize: int | float = 4,
 markerskip: int | list[int] | float | list[float] | None = None,
 markeredgewidth: float = 0.3,
 legendlabelcols: int = 4,
 fillstyle: str = "full", # "full", "none", "top", "bottom", "left", "right"
+transparency: bool = False, # Transparency of the exported figure
 fout: str | None = None,# "if None then figure will be displayed, if given a string, then attempt to save to str
 **kwargs,# other kwargs will be pass to ax.plot
 ```
