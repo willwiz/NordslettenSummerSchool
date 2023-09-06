@@ -68,14 +68,15 @@ def benchmark_plot(
     curve_labels: list[str] | None = None,
     color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
     alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
+    linestyle: list[str] | None = None,
     linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    marker: list[str] | None = None,
     markersize: int | float = 4,
     markerskip: int | list[int] | float | list[float] | None = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
+    transparency: bool = False,
     fout: str | None = None,
     **kwargs,
 ) -> None:
@@ -102,7 +103,7 @@ def benchmark_plot(
     if y_lim:
         plt.setp(fig.axes, ylim=y_lim)
     if fout:
-        fig.savefig(fout)
+        fig.savefig(fout, transparent=transparency)
     else:
         plt.show()
     plt.close(fig)
@@ -119,14 +120,15 @@ def plot_scalar(
     curve_labels: list[str] | None = None,
     color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
     alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
+    linestyle: list[str] | None = None,
     linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    marker: list[str] | None = None,
     markersize: int | float = 4,
     markerskip: int | list[int] | float | list[float] | None = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
+    transparency: bool = False,
     fout: str | None = None,
     **kwargs,
 ) -> None:
@@ -153,7 +155,7 @@ def plot_scalar(
     if y_lim:
         plt.setp(fig.axes, ylim=y_lim)
     if fout:
-        fig.savefig(fout)
+        fig.savefig(fout, transparent=transparency)
     else:
         plt.show()
     plt.close(fig)
@@ -170,14 +172,15 @@ def plot_stress_vs_strain_1D(
     curve_labels: list[str] | None = None,
     color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
     alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
+    linestyle: list[str] | None = None,
     linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    marker: list[str] | None = None,
     markersize: int | float = 4,
     markerskip: int | list[int] | float | list[float] | None = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
+    transparency: bool = False,
     fout: str | None = None,
     **kwargs,
 ) -> None:
@@ -203,7 +206,7 @@ def plot_stress_vs_strain_1D(
     if y_lim:
         plt.setp(fig.axes, ylim=y_lim)
     if fout:
-        fig.savefig(fout)
+        fig.savefig(fout, transparent=transparency)
     else:
         plt.show()
     plt.close(fig)
@@ -225,14 +228,15 @@ def plot_stress_vs_strain_2D(
     curve_labels: list[str] | None = None,
     color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
     alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
+    linestyle: list[str] | None = None,
     linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    marker: list[str] | None = None,
     markersize: int | float = 4,
     markerskip: int | list[int] | float | list[float] | None = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
+    transparency: bool = False,
     fout: str | None = None,
     **kwargs,
 ) -> None:
@@ -261,7 +265,7 @@ def plot_stress_vs_strain_2D(
     if y_lim:
         plt.setp(fig.axes, ylim=y_lim)
     if fout:
-        fig.savefig(fout)
+        fig.savefig(fout, transparent=transparency)
     else:
         plt.show()
     plt.close(fig)
@@ -279,14 +283,15 @@ def plot_strain_vs_time_1D(
     curve_labels: list[str] | None = None,
     color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
     alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
+    linestyle: list[str] | None = None,
     linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    marker: list[str] | None = None,
     markersize: int | float = 4,
     markerskip: int | list[int] | float | list[float] | None = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
+    transparency: bool = False,
     fout: str | None = None,
     **kwargs,
 ) -> None:
@@ -312,7 +317,7 @@ def plot_strain_vs_time_1D(
     if y_lim:
         plt.setp(fig.axes, ylim=y_lim)
     if fout:
-        fig.savefig(fout)
+        fig.savefig(fout, transparent=transparency)
     else:
         plt.show()
     plt.close(fig)
@@ -335,14 +340,15 @@ def plot_strain_vs_time_2D(
     curve_labels: list[str] | None = None,
     color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
     alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
+    linestyle: list[str] | None = None,
     linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    marker: list[str] | None = None,
     markersize: int | float = 4,
     markerskip: int | list[int] | float | list[float] | None = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
+    transparency: bool = False,
     fout: str | None = None,
     **kwargs,
 ) -> None:
@@ -370,7 +376,7 @@ def plot_strain_vs_time_2D(
     if y_lim:
         plt.setp(fig.axes, ylim=y_lim)
     if fout:
-        fig.savefig(fout)
+        fig.savefig(fout, transparent=transparency)
     else:
         plt.show()
     plt.close(fig)
@@ -388,14 +394,15 @@ def plot_stress_vs_time_1D(
     curve_labels: list[str] | None = None,
     color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
     alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
+    linestyle: list[str] | None = None,
     linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    marker: list[str] | None = None,
     markersize: int | float = 4,
     markerskip: int | list[int] | float | list[float] | None = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
+    transparency: bool = False,
     fout: str | None = None,
     **kwargs,
 ) -> None:
@@ -421,7 +428,7 @@ def plot_stress_vs_time_1D(
     if y_lim:
         plt.setp(fig.axes, ylim=y_lim)
     if fout:
-        fig.savefig(fout)
+        fig.savefig(fout, transparent=transparency)
     else:
         plt.show()
     plt.close(fig)
@@ -444,14 +451,15 @@ def plot_stress_vs_time_2D(
     curve_labels: list[str] | None = None,
     color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
     alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
+    linestyle: list[str] | None = None,
     linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    marker: list[str] | None = None,
     markersize: int | float = 4,
     markerskip: int | list[int] | float | list[float] | None = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
+    transparency: bool = False,
     fout: str | None = None,
     **kwargs,
 ) -> None:
@@ -479,7 +487,7 @@ def plot_stress_vs_time_2D(
     if y_lim:
         plt.setp(fig.axes, ylim=y_lim)
     if fout:
-        fig.savefig(fout)
+        fig.savefig(fout, transparent=transparency)
     else:
         plt.show()
     plt.close(fig)
