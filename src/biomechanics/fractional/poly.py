@@ -38,7 +38,7 @@ def _analytical_polynomial_fractionalderiv_function(
 ) -> Arr[f64]:
     t = time ** (1.0 - alpha)
     res = pars[0] * t / gamma(2.0 - alpha)
-    for k, p in enumerate(pars, start=2):
+    for k, p in enumerate(pars[1:], start=2):
         t = t * time
         res = res + p * t * gamma(k + 1.0) / gamma(k + 1.0 - alpha)
     return res

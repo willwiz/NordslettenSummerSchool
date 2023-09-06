@@ -27,13 +27,6 @@ def main():
     fiber_direction = np.array([1, 0, 0], dtype=f64)
     sheet_direction = np.array([0, 1, 0], dtype=f64)
     # Make some models
-    neo_model = NeoHookeanModel(0.5)
-    gucci_model = GuccioneModel(
-        0.05, 0.0, 33.27, 12.92, 11.99, fiber_direction, sheet_direction
-    )
-    costa_model = CostaModel(
-        0.13, 33.27, 20.83, 2.63, 12.92, 11.99, 11.46, fiber_direction, sheet_direction
-    )
     holzapfel_model = HolzapfelOgdenModel(
         0.61,
         7.5,
@@ -47,23 +40,10 @@ def main():
         sheet_direction,
     )
     # Compute some stresses
-    gucci_stress = add_hydrostatic_pressure(
-        gucci_model.pk2(biaxial_deformation), biaxial_deformation
-    )
-    costa_stress = add_hydrostatic_pressure(
-        costa_model.pk2(biaxial_deformation), biaxial_deformation
-    )
     holzapfel_stress = add_hydrostatic_pressure(
         holzapfel_model.pk2(biaxial_deformation), biaxial_deformation
     )
     green_strain = compute_green_lagrange_strain(biaxial_deformation)
-    plot_stress_vs_strain_2D(
-        (green_strain, gucci_stress),
-        (green_strain, costa_stress),
-        (green_strain, holzapfel_stress),
-        curve_labels=["Guccioni", "Costa", "Holzapfel"],
-        fout="hyperelastic_stresses.png",
-    )
     # make some viscoelastic models
     frac_holzapfel_model = FractionalVEModel(0.2, 2.0, 9, models=[holzapfel_model])
     diff_holzapfel_model = FractionalDiffEqModel(
@@ -103,7 +83,6 @@ def main():
             "Maxwell",
             "Zener",
         ],
-        fout="viscoelastic_stresses.png",
     )
     plot_stress_vs_time_2D(
         time,
@@ -121,7 +100,6 @@ def main():
             "Maxwell",
             "Zener",
         ],
-        fout="viscoelastic_vs_time.png",
     )
 
 

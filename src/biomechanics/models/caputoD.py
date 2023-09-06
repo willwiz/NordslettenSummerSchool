@@ -99,12 +99,12 @@ def _caputo_derivative_body(
     Np: int, K0: Arr[f64], bek: Arr[f64], e2: Arr[f64], S: Arr[f64]
 ) -> Arr[f64]:
     nt, *dim = S.shape
-    df = np.diff(S, prepend=[S[0, :]], axis=0)
-    beta_part = np.einsum("mk,mi...->mki...", bek, df)
+    df = np.diff(S, prepend=[S[0]], axis=0)
+    beta_part = np.einsum("mk,m...->mk...", bek, df)
     Qk = np.zeros((nt, Np, *dim), dtype=f64)
     for i in range(1, nt):
-        Qk[i] = np.einsum("k,ki...->ki...", e2[i], Qk[i - 1]) + beta_part[i]
-    return np.einsum("m,mi...->mi...", K0, df) + np.einsum("mki...->mi...", Qk)
+        Qk[i] = np.einsum("k,k...->k...", e2[i], Qk[i - 1]) + beta_part[i]
+    return np.einsum("m,m...->m...", K0, df) + np.einsum("mk...->m...", Qk)
 
 
 def caputo_derivative_linear(carp: CaputoInitialize, S: Arr[f64], dt: Arr[64]):
@@ -135,11 +135,11 @@ def _caputo_diffeq_body(
     Qk = np.zeros((Np, *dim), dtype=f64)
     LHS = np.zeros_like(S)
     for i in range(1, nt):
-        v = S[i] - delta * np.einsum("k,ki...->i...", e2[i], Qk)
+        v = S[i] - delta * np.einsum("k,k...->...", e2[i], Qk)
         LHS[i] = (v + (K1[i] * LHS[i - 1])) / (1.0 + K1[i])
         # Updates
-        beta_part = np.einsum("k,i...->ki...", bek[i], LHS[i] - LHS[i - 1])
-        Qk = np.einsum("k,ki...->ki...", e2[i], Qk) + beta_part
+        beta_part = np.einsum("k,...->k...", bek[i], LHS[i] - LHS[i - 1])
+        Qk = np.einsum("k,k...->k...", e2[i], Qk) + beta_part
     return LHS
 
 

@@ -272,14 +272,17 @@ dpi: int = 150 # DPI
 x_label: str|list[str] = r"$E$"
 y_label: str|list[str] = r"$S$ (kPa)"
 curve_labels: list[str] | None = None # in order create a legend with labels for each data passed in
-colors: list[str] = ["k", "r", "b", "g", "c", "m"]
-lines: list[str] = ["-", "-", "-", "-", "-", "-"] # "-" for lines, "none" for no lines
-marker: list[str] = ["none", "none", "none", "none", "none", "none"] # "o" for markers, "none" for no markers
-markersize: int | float = 4
-markerskip: int | list[int] | float | list[float] | None = None
-markeredgewidth: float = 0.3
-fillstyle: str = "full" # "full", "none", "top", "bottom", "left", "right"
-fout: str | None = None # "if None then figure will be displayed, if given a string, then attempt to save to str
-**kwargs # other kwargs will be pass to ax.plot
+color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
+alpha: list[float] | None = None,
+linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"], # "-" for lines, "none" for no lines
+linewidth: list[float] | None = None,
+marker: list[str] | None = ["none", "none", "none", "none", "none", "none"], # "o" for markers, "none" for no markers
+markersize: int | float = 4,
+markerskip: int | list[int] | float | list[float] | None = None,
+markeredgewidth: float = 0.3,
+legendlabelcols: int = 4,
+fillstyle: str = "full", # "full", "none", "top", "bottom", "left", "right"
+fout: str | None = None,# "if None then figure will be displayed, if given a string, then attempt to save to str
+**kwargs,# other kwargs will be pass to ax.plot
 ```
 
