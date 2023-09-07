@@ -3,6 +3,10 @@ from biomechanics import *
 
 
 def benchmarkit(pars: np.ndarray, alpha: float, dt: float, Np: int) -> float:
+    """
+    A benchmark function for fractional derivative of an arbitrary polynomial
+    pars are the scaling constant for each term starting with linear
+    """
     nt = round(5.0 / dt) + 1
     time = np.linspace(0, 5, nt, dtype=f64)
     poly = polynomial_function(pars, time)
@@ -15,9 +19,14 @@ def benchmarkit(pars: np.ndarray, alpha: float, dt: float, Np: int) -> float:
 
 
 def main():
+    """
+    For the purpose of this demo, we assume that the time is between 0 and 5s
+    """
     # Define time domain
     time = np.linspace(0, 5, 501, dtype=f64)
-    # Wave forms, period 1s
+    """
+    First we generate some data for linear - cubic curves
+    """
     linear = polynomial_function([1 / time[-1]], time)
     quadratic = polynomial_function([0, 1 / time[-1] ** 2], time)
     cubic = polynomial_function([0, 0, 1 / time[-1] ** 3], time)
@@ -28,6 +37,9 @@ def main():
         x_label="time (s)",
         curve_labels=["linear", "quadratic", "cubic"],
     )
+    """
+    Next we generate the analytical solution of the fractional derivative on polynomials.
+    """
     linear_analytic = analytical_polynomial_fractionalderiv_function(
         0.1, [1 / time[-1]], time
     )
@@ -44,6 +56,11 @@ def main():
         x_label="time (s)",
         curve_labels=["linear", "quadratic", "cubic"],
     )
+    """
+    Now let us try the prony approximation. We begin by precomputing the parameters for the
+    approximation with CaputoInitialize, then calling caputo_derivative_linear on the data
+    generated in the first step to compute the approximation of the fractional derivative.
+    """
     # Create deformation gradient
     carp = CaputoInitialize(0.1, 5.0, Np=3)
     dt = np.diff(time, prepend=-1)
@@ -72,7 +89,12 @@ def main():
         ],
         legendlabelcols=3,
     )
-    # Benchmark one
+    """
+    The benchmarkit function does the simulation above and also compute the L2 norm of
+    the residual between the analystical solution and the approaximation.
+    We can call this function for several different dt and number of Prony term Np and
+    observe how the errors of the approximation changes with dt and the number of prony terms
+    """
     benchmarks = [
         [
             benchmarkit([0, 0, 1 / 5.0**3], 0.1, d, n)

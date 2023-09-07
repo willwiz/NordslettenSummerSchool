@@ -49,7 +49,27 @@ See `example.py` for example.
 
 ### Kinematics
 
-This module contains the following for generating deformation gradient data:
+The package contains tools for describing incompressible deformations in 1D and 2D. Specifically, 1D deformations are of the form
+$$
+\begin{equation}
+\mathbf{F}(t) = \begin{bmatrix}
+\lambda(t) & 0 & 0\\
+0 & \frac{1}{\sqrt{\lambda(t)}} & 0 \\
+0& 0& \frac{1}{\sqrt{\lambda(t)}}
+\end{bmatrix},
+\end{equation}
+$$
+whereas 2D deformations are of the form
+$$
+\begin{equation}
+\mathbf{F}(t) = \begin{bmatrix}
+F_{11}(t) & F_{12}(t) & 0\\
+F_{21}(t) & F_{22}(t) & 0 \\
+0& 0& \frac{1}{F_{11}(t) F_{22}(t) - F_{12}(t)F_{21}(t)}
+\end{bmatrix}.
+\end{equation}
+$$
+The main components of the tensors are up to the users to define, and the following functions are provided to create the deformation gradient tensors.
 ```python
 def construct_tensor_uniaxial(stretch: NDArray[f64]) -> NDArray[f64]: pass
 
@@ -61,7 +81,10 @@ def construct_tensor_biaxial(
 ) -> NDArray[f64]: pass
 ```
 
-This module also contains the following for converting the deformation gradient to other strain tensor types:
+
+
+
+This module also contains the following for converting the deformation gradient to other strain tensor types, right Cauchy Green strain ($\mathbf{C} = \mathbf{F}^T\mathbf{F}$), left Cauchy Green strain ($\mathbf{B}= \mathbf{F}\mathbf{F}^T$), and Green-Lagrange strain ($\mathbf{E} = \frac{1}{2}\left(\mathbf{C} - \mathbf{I}\right)$).
 ```python
 def compute_right_cauchy_green(F: NDArray[f64]) -> NDArray[f64]: pass
 
@@ -70,11 +93,9 @@ def compute_left_cauchy_green(F: NDArray[f64]) -> NDArray[f64]: pass
 def compute_green_lagrange_strain(F: NDArray[f64]) -> NDArray[f64]: pass
 ```
 
-### Constitutive Models
 
-All constitutive models are Python classes that instantiate with their material parameters and provide a method `pk2` that returns the second Piola Kirchhoff stress tensor.
 
-This module also contains the following functions for converting to other stress tensor types:
+Similarly, this package also contains the following functions for converting to other stress tensor types from the 2nd Piola Kirchhoff stress: 1st Piola Kirchhoff stress ($\mathbf{P}$) and the Cauchy stress ($\mathbf{\sigma})
 
 ```python
 def compute_pk1_from_pk2(S: NDArray[f64], F: NDArray[f64]) -> NDArray[f64]: pass
@@ -82,7 +103,15 @@ def compute_pk1_from_pk2(S: NDArray[f64], F: NDArray[f64]) -> NDArray[f64]: pass
 def compute_cauchy_from_pk2(S: NDArray[f64], F: NDArray[f64]) -> NDArray[f64]: pass
 ```
 
+### Constitutive Models
+
+All constitutive models are Python classes that instantiate with their material parameters and provide a method `pk2` that returns the 2nd Piola Kirchhoff stress tensor.
+
+
+
 #### Hyperelastic Constitutive Models
+
+
 All hyperelastic models inherit from
 ```python
 class HyperelasticModel(abc.ABC):
@@ -164,6 +193,8 @@ class ViscoelasticModel(abc.ABC):
     def pk2(self, F: NDArray[f64], time: NDArray[f64]) -> NDArray[f64]:
         pass
 ```
+thus needing an additional time argument.
+
 
 Three classic viscoelastic models are provided, they operate on hyperelastic laws.
 ```python
@@ -230,11 +261,12 @@ class FractionalDiffEqModel(ViscoelasticModel):
 
 
 #### Hydrostatic Pressure
-You can add a hydrostatic pressure with
+You can add a hydrostatic pressure, i.e. the term $p(J - 1)$ in the constitutive equations, using
 
 ```python
 def add_hydrostatic_pressure(S: NDArray[f64], F: NDArray[f64]) -> NDArray[f64]: pass
 ```
+
 
 ### Composing Models
 The following two classes are provided for composing models:
@@ -273,7 +305,7 @@ For example,
 ```
 ### Plotting
 
-The following plot functions are provided:
+The following plot functions, with self-documenting names, are provided:
 
 ```python
 

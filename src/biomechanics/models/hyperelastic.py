@@ -70,7 +70,13 @@ class GuccioneModel(HyperelasticModel):
     ) -> None:
         self.mu = mu / 2.0
         self.b1 = 2.0 * b_1
-        self.b2 = np.array([[b_ff, b_fs, b_fs], [b_fs, b_sn, b_sn], [b_fs, b_sn, b_sn]])
+        self.b2 = np.array(
+            [
+                [b_ff, 0.5 * b_fs, 0.5 * b_fs],
+                [0.5 * b_fs, b_sn, 0.5 * b_sn],
+                [0.5 * b_fs, 0.5 * b_sn, b_sn],
+            ]
+        )
         self.H = 2.0 * np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=float)
         self.fiber = get_change_of_basis_tensor(v_f, v_s)
 
@@ -105,7 +111,12 @@ class CostaModel(HyperelasticModel):
     ) -> None:
         self.mu = mu / 2.0
         self.b = np.array(
-            [[b_ff, b_fs, b_fn], [b_fs, b_ss, b_sn], [b_fn, b_sn, b_nn]], dtype=float
+            [
+                [b_ff, 0.5 * b_fs, 0.5 * b_fn],
+                [0.5 * b_fs, b_ss, 0.5 * b_sn],
+                [0.5 * b_fn, 0.5 * b_sn, b_nn],
+            ],
+            dtype=float,
         )
         self.fiber = get_change_of_basis_tensor(v_f, v_s)
 
@@ -142,8 +153,12 @@ class HolzapfelOgdenModel(HyperelasticModel):
     ) -> None:
         self.k_iso = k_iso
         self.b_iso = b_iso
-        self.k_fiber = np.array([[k_ff, k_fs, 0], [k_fs, k_ss, 0], [0, 0, 0]])
-        self.b_fiber = np.array([[b_ff, b_fs, 0], [b_fs, b_ss, 0], [0, 0, 0]])
+        self.k_fiber = np.array(
+            [[k_ff, 0.5 * k_fs, 0], [0.5 * k_fs, k_ss, 0], [0, 0, 0]]
+        )
+        self.b_fiber = np.array(
+            [[b_ff, 0.5 * b_fs, 0], [0.5 * b_fs, b_ss, 0], [0, 0, 0]]
+        )
         self.fiber = get_change_of_basis_tensor(v_f, v_s)
 
     def pk2(
@@ -160,3 +175,47 @@ class HolzapfelOgdenModel(HyperelasticModel):
         W_fiber = np.einsum("ij,mij->mij", self.k_fiber, np.exp(b_fiber))
         S_fiber = W_fiber * E_material
         return S_iso + np.einsum("ji,mjk,kl->mil", self.fiber, S_fiber, self.fiber)
+
+
+class NordslettenModel(HyperelasticModel):
+    __slots__ = ["b1", "b2", "k_iso", "k_shear", "fiber"]
+    b1: float
+    b2: float
+    k_iso: Arr[f64]
+    k_shear: Arr[f64]
+    fiber: Arr[f64]
+
+    def __init__(
+        self,
+        b1: float,
+        b2: float,
+        k_ff: float,
+        k_ss: float,
+        k_nn: float,
+        k_fs: float,
+        k_fn: float,
+        k_sn: float,
+        v_f: Arr[f64],
+        v_s: Arr[f64],
+    ) -> None:
+        self.b1 = b1
+        self.b2 = b2
+        self.k_iso = np.array([[k_ff, 0, 0], [0, k_ss, 0], [0, 0, k_nn]], dtype=f64)
+        self.k_shear = 0.5 * np.array(
+            [[0, k_fs, k_fn], [k_fs, 0, k_sn], [k_fn, k_sn, 0]], dtype=f64
+        )
+        self.fiber = get_change_of_basis_tensor(v_f, v_s)
+
+    def pk2(self, F: Arr[f64]) -> Arr[f64]:
+        C = compute_right_cauchy_green(F)
+        C_material = np.einsum("ij,mjk,lk->mil", self.fiber, C, self.fiber)
+        C_material2 = C_material * C_material
+        I_iso = np.einsum("mii->m", C) - 3
+        I_shear = C_material2[:, 0, 1] + C_material2[:, 0, 2] + C_material2[:, 1, 2]
+        W1 = np.exp(self.b1 * I_iso)
+        W2 = np.exp(self.b2 * I_shear)
+        S_iso = np.einsum("m,mij->mij", W1, C_material) - 1.0
+        S_iso = np.einsum("ij,mij->mij", self.k_iso, S_iso)
+        S_shear = np.einsum("ij,mij->mij", self.k_shear, C_material)
+        S_shear = np.einsum("m,mij->mij", W2, S_shear)
+        return np.einsum("ji,mjk,kl->mil", self.fiber, S_iso + S_shear, self.fiber)
