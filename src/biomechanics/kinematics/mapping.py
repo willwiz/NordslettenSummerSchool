@@ -8,7 +8,7 @@ def compute_right_cauchy_green(F: Arr[f64]) -> Arr[f64]:
     elif F.shape[1:] == (3, 3):
         return einsum("nji,njk->nik", F, F)
     else:
-        print(F, F.shape)
+        raise ValueError(f"Shape is not appropriate{F.shape}")
 
 
 def compute_left_cauchy_green(F: Arr[f64]) -> Arr[f64]:
@@ -17,7 +17,7 @@ def compute_left_cauchy_green(F: Arr[f64]) -> Arr[f64]:
     elif F.shape[1:] == (3, 3):
         return einsum("nij,nkj->nik", F, F)
     else:
-        print(F, F.shape)
+        raise ValueError(f"Shape does not match{F.shape}")
 
 
 def compute_green_lagrange_strain(F: Arr[f64]) -> Arr[f64]:
@@ -34,7 +34,7 @@ def compute_pk1_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]:
     elif F.shape[1:] == (3, 3):
         return einsum("nij,njk->nik", F, S)
     else:
-        print(F, F.shape)
+        raise ValueError(f"Shape does not match{F.shape}")
 
 
 def compute_cauchy_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]:
@@ -45,4 +45,4 @@ def compute_cauchy_from_pk2(S: Arr[f64], F: Arr[f64]) -> Arr[f64]:
     elif F.shape[1:] == (3, 3):
         return einsum("nij,njk,nlk->nil", F, S, F)
     else:
-        print(F, F.shape)
+        raise ValueError(f"Shape does not match{F.shape}")

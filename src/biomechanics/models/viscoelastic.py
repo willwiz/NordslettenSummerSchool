@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List, Union
 import numpy as np
 from numpy import float64 as f64
 from numpy.typing import NDArray as Arr
@@ -10,19 +11,29 @@ from biomechanics.models.caputoD import (
 from biomechanics._interfaces import HyperelasticModel, ViscoelasticModel
 
 
-@dataclass(slots=True)
 class CompositeViscoelasticModel(ViscoelasticModel):
-    hyperelastic_models: list[HyperelasticModel] | None = None
-    viscoelastic_models: list[ViscoelasticModel] | None = None
+    __slots__ = ["hyperelastic_models", "viscoelastic_models"]
+    hyperelastic_models: List[HyperelasticModel]
+    viscoelastic_models: List[ViscoelasticModel]
+
+    def __init__(
+        self,
+        hyperelastic_models: Union[List[HyperelasticModel], None] = None,
+        viscoelastic_models: Union[List[ViscoelasticModel], None] = None,
+    ) -> None:
+        self.hyperelastic_models = (
+            hyperelastic_models if hyperelastic_models else list()
+        )
+        self.viscoelastic_models = (
+            viscoelastic_models if viscoelastic_models else list()
+        )
 
     def pk2(self, F: Arr[f64], time: Arr[f64]) -> Arr[f64]:
         res = np.zeros_like(F)
-        if self.hyperelastic_models:
-            for law in self.hyperelastic_models:
-                res = res + law.pk2(F)
-        if self.viscoelastic_models:
-            for law in self.viscoelastic_models:
-                res = res + law.pk2(F, time)
+        for law in self.hyperelastic_models:
+            res = res + law.pk2(F)
+        for law in self.viscoelastic_models:
+            res = res + law.pk2(F, time)
         return res
 
 
@@ -34,12 +45,12 @@ def array_time_derivative(arr: Arr[f64], dt: Arr[f64]) -> Arr[f64]:
 class KelvinVoigtModel(ViscoelasticModel):
     __slots__ = ["w", "hlaws", "vlaws"]
     w: float
-    laws: list[HyperelasticModel] | None
+    laws: List[HyperelasticModel]
 
     def __init__(
         self,
         weight: float = 1.0,
-        models: list[HyperelasticModel] | None = None,
+        models: Union[List[HyperelasticModel], None] = None,
     ) -> None:
         self.w = weight
         self.laws = models if models else list()
@@ -65,15 +76,18 @@ def _solve_maxwell_diffeq(w: float, dt: Arr[f64], stresses: Arr[f64]):
 class MaxwellModel(ViscoelasticModel):
     __slots__ = ["w", "hlaws"]
     w: float
-    hlaws: list[HyperelasticModel]
+    hlaws: List[HyperelasticModel]
 
     def __init__(
         self,
         weight: float = 0.0,
-        models: list[HyperelasticModel] | None = None,
+        models: Union[List[HyperelasticModel], None] = None,
     ) -> None:
         self.w = weight
-        self.hlaws = models
+        if models:
+            self.hlaws = models
+        else:
+            self.hlaws = list()
 
     def pk2(self, F: Arr[f64], time: Arr[f64]) -> Arr[f64]:
         dt = np.diff(time, prepend=-1)
@@ -87,15 +101,15 @@ class ZenerModel(ViscoelasticModel):
     __slots__ = ["w_right", "w_left", "hlaws", "vlaws"]
     w_left: float
     w_right: float
-    hlaws: list[HyperelasticModel] | None
-    vlaws: list[ViscoelasticModel] | None
+    hlaws: List[HyperelasticModel]
+    vlaws: List[ViscoelasticModel]
 
     def __init__(
         self,
         weight_LHS: float = 0.0,
         weight_RHS: float = 1.0,
-        hyperelastic_models: list[HyperelasticModel] | None = None,
-        viscoelastic_models: list[ViscoelasticModel] | None = None,
+        hyperelastic_models: Union[List[HyperelasticModel], None] = None,
+        viscoelastic_models: Union[List[HyperelasticModel], None] = None,
     ) -> None:
         self.w_right = weight_RHS
         self.w_left = weight_LHS
@@ -122,14 +136,14 @@ class ZenerModel(ViscoelasticModel):
 class FractionalVEModel(ViscoelasticModel):
     __slots__ = ["carp", "laws"]
     carp: CaputoInitialize
-    laws: list[HyperelasticModel]
+    laws: List[HyperelasticModel]
 
     def __init__(
         self,
         alpha: float,
         Tf: float,
         Np: int = 9,
-        models: list[HyperelasticModel] | None = None,
+        models: Union[List[HyperelasticModel], None] = None,
     ) -> None:
         self.carp = CaputoInitialize(alpha, Tf, Np)
         self.laws = models
@@ -146,8 +160,8 @@ class FractionalDiffEqModel(ViscoelasticModel):
     __slots__ = ["delta", "carp", "hlaws", "vlaws"]
     delta: float
     carp: CaputoInitialize
-    hlaws: list[HyperelasticModel] | None
-    vlaws: list[ViscoelasticModel] | None
+    hlaws: List[HyperelasticModel]
+    vlaws: List[ViscoelasticModel]
 
     def __init__(
         self,
@@ -155,8 +169,8 @@ class FractionalDiffEqModel(ViscoelasticModel):
         delta: float,
         Tf: float,
         Np: int = 9,
-        hyperelastic_models: list[HyperelasticModel] | None = None,
-        viscoelastic_models: list[ViscoelasticModel] | None = None,
+        hyperelastic_models: Union[List[HyperelasticModel], None] = None,
+        viscoelastic_models: Union[List[ViscoelasticModel], None] = None,
     ) -> None:
         self.delta = delta
         self.carp = CaputoInitialize(alpha, Tf, Np)

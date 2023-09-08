@@ -8,8 +8,9 @@ from numpy.typing import NDArray as Arr
 pack_dir = os.path.dirname(os.path.abspath(__file__))
 
 
-@dataclass(slots=True, init=False)
+@dataclass(init=False)
 class CaputoInitialize:
+    __slots__ = ["Np", "beta0", "betas", "taus"]
     Np: int
     beta0: float
     betas: Arr[f64]

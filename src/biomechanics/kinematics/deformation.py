@@ -1,3 +1,4 @@
+from typing import Union
 import numpy as np
 from numpy.typing import NDArray as Arr
 from numpy import float64 as f64
@@ -12,10 +13,10 @@ def construct_tensor_uniaxial(stretch: Arr[f64]) -> Arr[f64]:
 
 
 def construct_tensor_biaxial(
-    F11: Arr[f64] | float = 1.0,
-    F12: Arr[f64] | float = 0.0,
-    F21: Arr[f64] | float = 0.0,
-    F22: Arr[f64] | float = 1.0,
+    F11: Union[Arr[f64], float] = 1.0,
+    F12: Union[Arr[f64], float] = 0.0,
+    F21: Union[Arr[f64], float] = 0.0,
+    F22: Union[Arr[f64], float] = 1.0,
 ) -> Arr[f64]:
     # Validating Input
     n1 = F11.shape[0] if isinstance(F11, np.ndarray) else 1

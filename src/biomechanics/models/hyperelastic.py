@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 import numpy as np
 from numpy.typing import NDArray as Arr
 from numpy import float64 as f64
@@ -23,9 +24,10 @@ def get_change_of_basis_tensor(v_f: Arr[f64], v_s: Arr[f64]):
     return np.array([v_f, v_s, v_n], dtype=float)
 
 
-@dataclass(slots=True)
+@dataclass()
 class CompositeHyperelasticModel(HyperelasticModel):
-    models: list[HyperelasticModel]
+    __slots__ = ["models"]
+    models: List[HyperelasticModel]
 
     def pk2(self, F: Arr[f64]) -> Arr[f64]:
         res = np.zeros_like(F)
@@ -34,13 +36,14 @@ class CompositeHyperelasticModel(HyperelasticModel):
         return res
 
 
-@dataclass(slots=True)
+@dataclass()
 class NeoHookeanModel(HyperelasticModel):
     """2D Neo Hookean Model
     Attributes:
         mu (float): Bulk Modulus.
     """
 
+    __slots__ = ["mu"]
     mu: float  # Bulk Modulus
 
     def pk2(self, F: Arr[f64]) -> Arr[f64]:

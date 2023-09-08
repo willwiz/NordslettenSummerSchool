@@ -22,7 +22,7 @@ def main():
     A ramping curve can be created using the clip function from numpy, here we clip all
     points between 0 and 1
     """
-    sinusoid_wave = np.sin(np.pi * time / period) ** 2
+    sinusoid_wave = np.sin(np.pi * time / period, dtype=f64) ** 2.0
     triangle_wave = np.arccos(np.cos(2 * np.pi * time / period)) / np.pi
     ramping_wave = np.clip(time / period, 0, 1)
     plot_scalar(
@@ -36,7 +36,7 @@ def main():
     """
     Let us consider sinusoidal loading with a period of 30s, it would look like this
     """
-    loading_curve = np.sin(np.pi * time / period) ** 2
+    loading_curve = np.sin(np.pi * time / period) ** 2.0
     plot_scalar(
         (time, loading_curve),
         figsize=(8, 3),

@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import Dict, List, Tuple, TypedDict, Union
 from matplotlib import markers
 import numpy as np
 from numpy.typing import NDArray as Arr
@@ -8,14 +8,14 @@ import matplotlib.pyplot as plt
 import matplotlib.figure as mplf
 
 
-_TENSOR_VECTOR_MAP: dict[int, tuple[int, int]] = {
+_TENSOR_VECTOR_MAP: Dict[int, Tuple[int, int]] = {
     0: (0, 0),
     1: (0, 1),
     2: (1, 0),
     3: (1, 1),
 }
 
-_LEGEND_KWARGS: dict[str, str | int | float | bool | None] = {
+_LEGEND_KWARGS: Dict[str, Union[str, int, float, bool, None]] = {
     "loc": "outside lower center",
     "handlelength": 1.0,
     "frameon": False,
@@ -25,23 +25,23 @@ _LEGEND_KWARGS: dict[str, str | int | float | bool | None] = {
 }
 
 
-class PlotCyclers(TypedDict):
-    color: list[str]
-    mec: list[str]
-    alpha: list[float]
-    linestyle: list[str]
-    linewidth: list[float]
-    marker: list[str]
+class PlotCyclers(TypedDict, total=False):
+    color: List[str]
+    mec: List[str]
+    alpha: List[float]
+    linestyle: List[str]
+    linewidth: List[float]
+    marker: List[str]
 
 
 def _create_cyclers(
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = ["-", "-", "-", "-", "-", "-"],
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = ["none", "none", "none", "none", "none", "none"],
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = ["-", "-", "-", "-", "-", "-"],
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = ["none", "none", "none", "none", "none", "none"],
 ) -> PlotCyclers:
-    cyclers: PlotCyclers = dict()
+    cyclers: PlotCyclers = {}
     if color:
         cyclers["color"] = color
         cyclers["mec"] = color
@@ -57,27 +57,27 @@ def _create_cyclers(
 
 
 def benchmark_plot(
-    x: Arr[f64] | Arr[i32],
+    x: Union[Arr[f64], Arr[i32]],
     *data: Arr[f64],
-    x_lim: list[float] | None = None,
-    y_lim: list[float] | None = None,
-    figsize: tuple[float, float] = (4, 3),
+    x_lim: Union[List[float], None] = None,
+    y_lim: Union[List[float], None] = None,
+    figsize: Tuple[float, float] = (4, 3),
     dpi: int = 150,
-    x_label: str | None = None,
-    y_label: str | None = None,
-    curve_labels: list[str] | None = None,
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = None,
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = None,
-    markersize: int | float = 4,
-    markerskip: int | list[int] | float | list[float] | None = None,
+    x_label: Union[str, None] = None,
+    y_label: Union[str, None] = None,
+    curve_labels: Union[List[str], None] = None,
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = None,
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = None,
+    markersize: Union[int, float] = 4,
+    markerskip: Union[int, List[int], float, List[float], None] = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
     transparency: bool = False,
-    fout: str | None = None,
+    fout: Union[str, None] = None,
     **kwargs,
 ) -> None:
     styles = {
@@ -110,26 +110,26 @@ def benchmark_plot(
 
 
 def plot_scalar(
-    *data: tuple[Arr[f64], Arr[f64]] | list[Arr[f64]],
-    x_lim: list[float] | None = None,
-    y_lim: list[float] | None = None,
-    figsize: tuple[float, float] = (4, 3),
+    *data: Union[Tuple[Arr[f64], Arr[f64]], List[Arr[f64]]],
+    x_lim: Union[List[float], None] = None,
+    y_lim: Union[List[float], None] = None,
+    figsize: Tuple[float, float] = (4, 3),
     dpi: int = 150,
-    x_label: str | None = None,
-    y_label: str | None = None,
-    curve_labels: list[str] | None = None,
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = None,
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = None,
-    markersize: int | float = 4,
-    markerskip: int | list[int] | float | list[float] | None = None,
+    x_label: Union[str, None] = None,
+    y_label: Union[str, None] = None,
+    curve_labels: Union[List[str], None] = None,
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = None,
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = None,
+    markersize: Union[int, float] = 4,
+    markerskip: Union[int, List[int], float, List[float], None] = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
     transparency: bool = False,
-    fout: str | None = None,
+    fout: Union[str, None] = None,
     **kwargs,
 ) -> None:
     styles = {
@@ -162,26 +162,26 @@ def plot_scalar(
 
 
 def plot_stress_vs_strain_1D(
-    *data: tuple[Arr[f64], Arr[f64]] | list[Arr[f64]],
-    x_lim: list[float] | None = None,
-    y_lim: list[float] | None = None,
-    figsize: tuple[float, float] = (4, 3),
+    *data: Union[Tuple[Arr[f64], Arr[f64]], List[Arr[f64]]],
+    x_lim: Union[List[float], None] = None,
+    y_lim: Union[List[float], None] = None,
+    figsize: Tuple[float, float] = (4, 3),
     dpi: int = 150,
     x_label: str = r"$E$",
     y_label: str = r"$S$ (kPa)",
-    curve_labels: list[str] | None = None,
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = None,
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = None,
-    markersize: int | float = 4,
-    markerskip: int | list[int] | float | list[float] | None = None,
+    curve_labels: Union[List[str], None] = None,
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = None,
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = None,
+    markersize: Union[int, float] = 4,
+    markerskip: Union[int, List[int], float, List[float], None] = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
     transparency: bool = False,
-    fout: str | None = None,
+    fout: Union[str, None] = None,
     **kwargs,
 ) -> None:
     styles = {
@@ -213,31 +213,31 @@ def plot_stress_vs_strain_1D(
 
 
 def plot_stress_vs_strain_2D(
-    *data: tuple[Arr[f64], Arr[f64]] | list[Arr[f64]],
-    x_lim: list[float] | None = None,
-    y_lim: list[float] | None = None,
-    figsize: tuple[float, float] = (8, 6),
+    *data: Union[Tuple[Arr[f64], Arr[f64]], List[Arr[f64]]],
+    x_lim: Union[List[float], None] = None,
+    y_lim: Union[List[float], None] = None,
+    figsize: Tuple[float, float] = (8, 6),
     dpi: int = 150,
-    x_label: list[str] = [r"$E_{11}$", r"$E_{12}$", r"$E_{21}$", r"$E_{22}$"],
-    y_label: list[str] = [
+    x_label: List[str] = [r"$E_{11}$", r"$E_{12}$", r"$E_{21}$", r"$E_{22}$"],
+    y_label: List[str] = [
         r"$S_{11}$ (kPa)",
         r"$S_{12}$ (kPa)",
         r"$S_{21}$ (kPa)",
         r"$S_{22}$ (kPa)",
     ],
-    curve_labels: list[str] | None = None,
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = None,
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = None,
-    markersize: int | float = 4,
-    markerskip: int | list[int] | float | list[float] | None = None,
+    curve_labels: Union[List[str], None] = None,
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = None,
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = None,
+    markersize: Union[int, float] = 4,
+    markerskip: Union[int, List[int], float, List[float], None] = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
     transparency: bool = False,
-    fout: str | None = None,
+    fout: Union[str, None] = None,
     **kwargs,
 ) -> None:
     styles = {
@@ -274,25 +274,25 @@ def plot_stress_vs_strain_2D(
 def plot_strain_vs_time_1D(
     time: Arr[f64],
     *data: Arr[f64],
-    x_lim: list[float] | None = None,
-    y_lim: list[float] | None = None,
-    figsize: tuple[float, float] = (4, 3),
+    x_lim: Union[List[float], None] = None,
+    y_lim: Union[List[float], None] = None,
+    figsize: Tuple[float, float] = (4, 3),
     dpi: int = 150,
     x_label: str = r"time (s)",
     y_label: str = r"$E$ (kPa)",
-    curve_labels: list[str] | None = None,
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = None,
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = None,
-    markersize: int | float = 4,
-    markerskip: int | list[int] | float | list[float] | None = None,
+    curve_labels: Union[List[str], None] = None,
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = None,
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = None,
+    markersize: Union[int, float] = 4,
+    markerskip: Union[int, List[int], float, List[float], None] = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
     transparency: bool = False,
-    fout: str | None = None,
+    fout: Union[str, None] = None,
     **kwargs,
 ) -> None:
     styles = {
@@ -326,30 +326,30 @@ def plot_strain_vs_time_1D(
 def plot_strain_vs_time_2D(
     time: Arr[f64],
     *data: Arr[f64],
-    x_lim: list[float] | None = None,
-    y_lim: list[float] | None = None,
-    figsize: tuple[float, float] = (8, 6),
+    x_lim: Union[List[float], None] = None,
+    y_lim: Union[List[float], None] = None,
+    figsize: Tuple[float, float] = (8, 6),
     dpi: int = 150,
     x_label: str = r"time (s)",
-    y_label: list[str] = [
+    y_label: List[str] = [
         r"$E_{11}$ (kPa)",
         r"$E_{12}$ (kPa)",
         r"$E_{21}$ (kPa)",
         r"$E_{22}$ (kPa)",
     ],
-    curve_labels: list[str] | None = None,
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = None,
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = None,
-    markersize: int | float = 4,
-    markerskip: int | list[int] | float | list[float] | None = None,
+    curve_labels: Union[List[str], None] = None,
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = None,
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = None,
+    markersize: Union[int, float] = 4,
+    markerskip: Union[int, List[int], float, List[float], None] = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
     transparency: bool = False,
-    fout: str | None = None,
+    fout: Union[str, None] = None,
     **kwargs,
 ) -> None:
     styles = {
@@ -385,25 +385,25 @@ def plot_strain_vs_time_2D(
 def plot_stress_vs_time_1D(
     time: Arr[f64],
     *data: Arr[f64],
-    x_lim: list[float] | None = None,
-    y_lim: list[float] | None = None,
-    figsize: tuple[float, float] = (4, 3),
+    x_lim: Union[List[float], None] = None,
+    y_lim: Union[List[float], None] = None,
+    figsize: Tuple[float, float] = (4, 3),
     dpi: int = 150,
     x_label: str = r"time (s)",
     y_label: str = r"$S$ (kPa)",
-    curve_labels: list[str] | None = None,
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = None,
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = None,
-    markersize: int | float = 4,
-    markerskip: int | list[int] | float | list[float] | None = None,
+    curve_labels: Union[List[str], None] = None,
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = None,
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = None,
+    markersize: Union[int, float] = 4,
+    markerskip: Union[int, List[int], float, List[float], None] = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
     transparency: bool = False,
-    fout: str | None = None,
+    fout: Union[str, None] = None,
     **kwargs,
 ) -> None:
     styles = {
@@ -437,30 +437,30 @@ def plot_stress_vs_time_1D(
 def plot_stress_vs_time_2D(
     time: Arr[f64],
     *data: Arr[f64],
-    x_lim: list[float] | None = None,
-    y_lim: list[float] | None = None,
-    figsize: tuple[float, float] = (8, 6),
+    x_lim: Union[List[float], None] = None,
+    y_lim: Union[List[float], None] = None,
+    figsize: Tuple[float, float] = (8, 6),
     dpi: int = 150,
     x_label: str = r"time (s)",
-    y_label: list[str] = [
+    y_label: List[str] = [
         r"$S_{11}$ (kPa)",
         r"$S_{12}$ (kPa)",
         r"$S_{21}$ (kPa)",
         r"$S_{22}$ (kPa)",
     ],
-    curve_labels: list[str] | None = None,
-    color: list[str] | None = ["k", "r", "b", "g", "c", "m"],
-    alpha: list[float] | None = None,
-    linestyle: list[str] | None = None,
-    linewidth: list[float] | None = None,
-    marker: list[str] | None = None,
-    markersize: int | float = 4,
-    markerskip: int | list[int] | float | list[float] | None = None,
+    curve_labels: Union[List[str], None] = None,
+    color: Union[List[str], None] = ["k", "r", "b", "g", "c", "m"],
+    alpha: Union[List[float], None] = None,
+    linestyle: Union[List[str], None] = None,
+    linewidth: Union[List[float], None] = None,
+    marker: Union[List[str], None] = None,
+    markersize: Union[int, float] = 4,
+    markerskip: Union[int, List[int], float, List[float], None] = None,
     markeredgewidth: float = 0.3,
     legendlabelcols: int = 4,
     fillstyle: str = "full",
     transparency: bool = False,
-    fout: str | None = None,
+    fout: Union[str, None] = None,
     **kwargs,
 ) -> None:
     styles = {

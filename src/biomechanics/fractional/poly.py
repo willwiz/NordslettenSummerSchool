@@ -1,3 +1,4 @@
+from typing import Tuple, Union
 import numpy as np
 from numpy import float64 as f64, int32 as i32
 from numpy.typing import NDArray as Arr
@@ -24,7 +25,7 @@ def _polynomial_function_with_exponents(
 
 
 def polynomial_function(
-    pars: Arr[f64] | tuple[Arr[f64], Arr[i32]], time: Arr[f64]
+    pars: Union[Arr[f64], Tuple[Arr[f64], Arr[i32]]], time: Arr[f64]
 ) -> Arr[f64]:
     if isinstance(pars, tuple):
         pars, exponents = pars
@@ -54,7 +55,7 @@ def _analytical_polynomial_fractionalderiv_function_with_exponent(
 
 
 def analytical_polynomial_fractionalderiv_function(
-    alpha: float, pars: Arr[f64] | tuple[Arr[f64], Arr[i32]], time: Arr[f64]
+    alpha: float, pars: Union[Arr[f64], Tuple[Arr[f64], Arr[i32]]], time: Arr[f64]
 ) -> Arr[f64]:
     if isinstance(pars, tuple):
         pars, exponents = pars
@@ -92,7 +93,7 @@ def _analytical_polynomial_fractionaldiffeq_function_with_exponent(
 def analytical_polynomial_fractionaldiffeq_function(
     alpha: float,
     delta: float,
-    pars: Arr[f64] | tuple[Arr[f64], Arr[i32]],
+    pars: Union[Arr[f64], Tuple[Arr[f64]], Arr[i32]],
     time: Arr[f64],
 ) -> Arr[f64]:
     if isinstance(pars, tuple):
