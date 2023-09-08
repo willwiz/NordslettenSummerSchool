@@ -112,7 +112,7 @@ All constitutive models are Python classes that instantiate with their material 
 #### Hyperelastic Constitutive Models
 
 
-All hyperelastic models inherit from
+All hyperelastic models has this signature, i.e, method for the second Piola Kirchhoff stress
 ```python
 class HyperelasticModel(abc.ABC):
 
@@ -185,7 +185,7 @@ class HolzapfelOgdenModel(HyperelasticModel):
 
 
 #### Viscoelastic Constitutive Models
-All viscoelastic models inherit from
+All viscoelastic models has this signature, i.e, method for the second Piola Kirchhoff stress
 ```python
 class ViscoelasticModel(abc.ABC):
 
