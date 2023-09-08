@@ -303,6 +303,63 @@ For example,
 
     stress = composite_model.pk2(F_tensor, time)
 ```
+
+### Benchmarking using polynomial functions
+
+This package also provides some tools for benchmarking fractional derivatives on polynomial functions. Polynomial data can be generated with the function:
+```python
+def polynomial_function(pars: Arr[f64] | tuple[Arr[f64], Arr[i32]], time: Arr[f64]) -> Arr[f64]: pass
+```
+`pars` are the constant in front of each term of the polynomial in order starting from 1, i.e.,
+$$
+\begin{equation}
+f(t) = \mathrm{pars}[0] t + \mathrm{pars}[1] t^2 + \mathrm{pars}[2] t^3 + \ldots
+\end{equation}
+$$
+Alternatively, the exponents can be passed in as well in a tuple, i.e.,
+$$
+\begin{equation}
+f(t) = \mathrm{pars}[0][0] t^{\mathrm{pars}[1][0]} + \mathrm{pars}[0][1] t^{\mathrm{pars}[1][1]}
++ \mathrm{pars}[0][2] t^{\mathrm{pars}[1][2]} + \ldots
+\end{equation}
+$$
+
+The analytical solution to the fractional derivative of polynomials is given by the function
+```python
+def analytical_polynomial_fractionalderiv_function(
+    alpha: float, pars: Arr[f64] | tuple[Arr[f64], Arr[i32]], time: Arr[f64]
+) -> Arr[f64]: pass
+```
+This function has an additional parameter `alpha: float`, which is the order of the fractional derivative.
+
+
+Two functions are provided to approximate the fractional derivative,
+```python
+def caputo_derivative_linear(carp: CaputoInitialize, S: Arr[f64], dt: Arr[64]): pass
+def caputo_diffeq_linear(
+    delta: float, carp: CaputoInitialize, S_HE: Arr[f64], S_VE: Arr[f64], dt: Arr[64]
+): pass
+```
+Here, `alpha` is the order of the derivative, `S` is the array of data being differentiated, and `dt` is the array of time steps. For `caputo_diffeq_linear`, which is a full fractional differential equation, `delta` is the weight on the fractional part of the left-hand side, `S_VE` will be differentiated on the right-hand side, whereas `S_HE` will not.
+
+
+In both functions, `carp` contains the pre-computed Prony series parameters for the Caputo fractional derivative. It is instantiated from the class
+```python
+@dataclass(slots=True, init=False)
+class CaputoInitialize:
+    Np: int
+    beta0: float
+    betas: Arr[f64]
+    taus: Arr[f64]
+
+    def __init__(self,
+        alpha: float,
+        Tf: float,
+        Np: int = 9,
+    ) -> None: pass
+```
+Here, `alpha` is order, `Tf` is the periodicity of the curve, and `Np` is the number of Prony terms.
+
 ### Plotting
 
 The following plot functions, with self-documenting names, are provided:
