@@ -83,7 +83,7 @@ def main():
     stretch = 1.0 + 0.4 * loading_curve
     F = construct_tensor_uniaxial(stretch)
     E = compute_green_lagrange_strain(F)
-    plot_strain_vs_time_1D(time, E)
+    plot_strain_vs_time_1D(time, F, y_label=r"$F$")
     """
     Now let us create a biaxial testing protocol,
         5 cycles of preconditioning at max strain, t = 0

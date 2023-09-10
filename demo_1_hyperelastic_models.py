@@ -77,6 +77,12 @@ def main():
     green lagrange strain
     """
     green_strain = compute_green_lagrange_strain(biaxial_deformation)
+    C = compute_right_cauchy_green(biaxial_deformation)
+    plot_strain_vs_time_2D(
+        time,
+        C,
+        y_label=[r"$C_{11}$", r"$C_{12}$", r"$C_{21}$", r"$C_{22}$"],
+    )
     plot_stress_vs_strain_2D(
         (green_strain, gucci_stress),
         (green_strain, costa_stress),
