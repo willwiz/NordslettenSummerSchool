@@ -1,6 +1,18 @@
 # NordslettenSummerSchool
 For Graz Biomechanical Summer School
 
+
+### Obtaining this package
+
+The best and easiest way to obtain this python package is through [git](https://git-scm.com/), i.e. running this in the directory where you want to download this
+```console
+git clone https://github.com/willwiz/nordsletten_summer_school.git
+```
+
+Alternatively, you can also download the entire repository as a zip by clicking the green code button near the top, i.e.,
+
+![How to download repository as a zip file](assets/download_zip.png)
+
 ### Before Getting Started
 
 Before you get started, make sure to install Python. To avoid contaminating your default Python setup, please use a virtual environment.
@@ -15,7 +27,7 @@ Activate your virtual environment. If you are using Windows, use
 ```
 If you are using Linux, macOS, or other Unix systems, use
 ```console
-source ./venv/bin/activate
+source ./.venv/bin/activate
 ```
 You can exit the virtual environment at any time by executing the command `deactivate`
 

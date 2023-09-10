@@ -48,6 +48,7 @@ def main():
     maxwell_holzapfel_model = MaxwellModel(0.5, models=[holzapfel_model])
     zener_holzapfel_model = ZenerModel(0.5, 1.0, viscoelastic_models=[holzapfel_model])
     # Compute some viscoelastic stresses, requires an extra argument of time
+    # Some multiplier are added for visual purposes
     holzapfel_stress = add_hydrostatic_pressure(
         holzapfel_model.pk2(biaxial_deformation), biaxial_deformation
     )
@@ -110,6 +111,7 @@ def main():
     stretch2 = 1.0 + 0.1 * loading_curve_2
     F = construct_tensor_biaxial(stretch1, 0, 0, stretch2)
     # Calculate the stresses
+    # Some multiplier are added for visual purposes
     holzapfel_stress = add_hydrostatic_pressure(holzapfel_model.pk2(F), F)
     frac_holzapfel_stress = add_hydrostatic_pressure(
         frac_holzapfel_model.pk2(F, time), F
