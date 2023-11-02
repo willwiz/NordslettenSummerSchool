@@ -25,6 +25,28 @@ _LEGEND_KWARGS: Dict[str, Union[str, int, float, bool, None]] = {
 }
 
 
+class _PLOT_SETTINGS(TypedDict, total=False):
+    x_lim: List[float]
+    y_lim: List[float]
+    figsize: Tuple[float, float]
+    dpi: int
+    x_label: Union[str, None]
+    y_label: Union[str, None]
+    curve_labels: Union[List[str], None]
+    color: Union[List[str], None]
+    alpha: Union[List[float], None]
+    linestyle: Union[List[str], None]
+    linewidth: Union[List[float], None]
+    marker: Union[List[str], None]
+    markersize: Union[int, float]
+    markerskip: Union[int, List[int], float, List[float], None]
+    markeredgewidth: float
+    legendlabelcols: int
+    fillstyle: str
+    transparency: bool
+    fout: Union[str, None]
+
+
 class PlotCyclers(TypedDict, total=False):
     color: List[str]
     mec: List[str]
